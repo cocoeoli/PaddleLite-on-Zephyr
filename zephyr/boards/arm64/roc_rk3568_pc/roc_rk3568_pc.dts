@@ -1,0 +1,26 @@
+/*
+ * Copyright 2022 HNU
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/dts-v1/;
+
+#include <arm64/rockchip/rockchip_rk3568.dtsi>
+#include <common/mem.h>
+
+/ {
+	model = "Rockchip ROCRK3568PC";
+	compatible = "rockchip,rk3568";
+
+	aliases {
+		serial2 = &uart2;
+	};
+
+};
+
+/* debug */
+&uart2 {
+    status = "okay";
+	current-speed = <1500000>;
+};
