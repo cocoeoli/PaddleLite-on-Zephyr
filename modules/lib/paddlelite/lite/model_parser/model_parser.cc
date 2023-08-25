@@ -322,7 +322,7 @@ void LoadModelNaiveFromFile(const std::string &filename,
   uint16_t meta_version;
   mem_read(&meta_version,2,start);
  // mem_read(&meta_version,2,(uint8_t **)start);
-  cout<<"meta_version is "<<meta_version<<endl;
+  //cout<<"meta_version is "<<meta_version<<endl;
   
   // (2)get opt version
   char opt_version[16];
@@ -330,7 +330,7 @@ void LoadModelNaiveFromFile(const std::string &filename,
 
   //mem_read(opt_version,16,(uint8_t **)start);
   mem_read(opt_version,16,start);
-  cout<<"opt_version is "<<opt_version<<endl;
+  //cout<<"opt_version is "<<opt_version<<endl;
   
 
   // (3)get topo_size
@@ -338,7 +338,7 @@ void LoadModelNaiveFromFile(const std::string &filename,
   start+=16;
   //mem_read(&topo_size,8,(uint8_t **)start);
   mem_read(&topo_size,8,start);
-  cout<<"topo_size is "<<topo_size<<endl;
+  //cout<<"topo_size is "<<topo_size<<endl;
   
 
   // (4)get topo data

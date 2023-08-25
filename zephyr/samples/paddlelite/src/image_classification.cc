@@ -1,11 +1,12 @@
 #include <iostream>
 #include <vector>
+#include <string>
 #include "paddle_api.h"
 using namespace std;
 #include <zephyr/kernel.h>
 #include <zephyr/timing/timing.h>
-using namespace paddle::lite_api;  // NOLINT
-#define  LITE_WITH_ARM
+using namespace paddle::lite_api;  
+
 int64_t ShapeProduction(const shape_t& shape) {
   int64_t res = 1;
   for (auto i : shape) res *= i;
@@ -25,8 +26,24 @@ std::shared_ptr<PaddlePredictor> predictor =
   for (int i = 0; i < ShapeProduction(input_tensor->shape()); ++i) {
     data[i] = 1;
   }
+
+  //Start time, end time
+  timing_t start_time, end_time; 
+  //Timer cycles 
+  uint64_t total_cycles;  
+  uint64_t total_ns;    
+  timing_init();
+  timing_start();
+  start_time = timing_counter_get();
+
   // 4. Run predictor
   predictor->Run();
+  end_time = timing_counter_get();
+  total_cycles = timing_cycles_get(&start_time, &end_time);
+  total_ns = timing_cycles_to_ns(total_cycles);
+  timing_stop();
+  cout<<"The total time is "<<total_ns<<" ns "<<endl;
+ 
   // 5. Get output
   std::unique_ptr<const Tensor> output_tensor(
       std::move(predictor->GetOutput(0)));
@@ -35,21 +52,9 @@ std::shared_ptr<PaddlePredictor> predictor =
     std::cout << "Output[" << i << "]: " << output_tensor->data<float>()[i]
               << std::endl;
   }
-  
 }
 
 int main(void) {
-  timing_t start_time, end_time;  //开始时间，结束时间
-  uint64_t total_cycles;   //计时器周期数
-  uint64_t total_ns;    //纳秒总时间
-  timing_init();
-  timing_start();
-  start_time = timing_counter_get();
   RunModel();
-  end_time = timing_counter_get();
-  total_cycles = timing_cycles_get(&start_time, &end_time);
-  total_ns = timing_cycles_to_ns(total_cycles);
-  timing_stop();
-  cout<<"total_ns is "<<total_ns<<endl;
   return 0;
 }
